@@ -1,0 +1,38 @@
+function onEdit(e) {
+  let sheet = e.source.getSheetByName("Sheet1"); // Replace "Sheet1" with your actual sheet name
+  if (!sheet) return; // If the sheet is not found, exit the function
+
+  let range = e.range; // The range that was edited
+  let row = range.getRow(); // The row number of the edited cell
+  let col = range.getColumn(); // The column number of the edited cell
+  let cellValue = range.getValue(); // The value of the edited cell
+
+  Logger.log("Edited cell: Row " + row + ", Column " + col + ", Value: " + cellValue);
+
+  // Check if the edit occurred in column 5 and the value is true (checkbox checked)
+  if (col == 5 && cellValue === true) {
+    let name = sheet.getRange(row, 1).getValue(); // Get name from column 1
+    let lastname = sheet.getRange(row, 2).getValue(); // Get lastname from column 2
+    let email = sheet.getRange(row, 3).getValue(); // Get email from column 3
+    let user = Session.getActiveUser().getEmail(); // Get the email address of the active user
+    let timestamp = new Date(); // Get the current timestamp
+
+    Logger.log("Preparing to send email to: " + email);
+
+    try {
+      const id = '1uGTb_sZR5R_hderkeqrvf16uZGviH1Gb'; // Document ID
+      const rep = email; // Use the correct email variable
+      const sub = "Potvrda o završenom Cyber Security treningu";
+      const body = 'Pozdrav ' + name + '! Ovo je automatski generisan mejl. Molim te zanemari ukoliko nije namenjen tebi. Hvala ti što si prisustvovao/la CyberSecurity treningu. Zamoliću te da potpišeš PDF fajl koji se nalazi u prilogu, da ga preimenuješ u format Ime Prezime - Cyber Security Potvrda o zavrsenom treningu i vratiš ga putem mejla na aleksej.vislavski@remade.rs. Hvala!';        
+      const att = DriveApp.getFileById(id);
+      MailApp.sendEmail(rep, sub, body, {
+        attachments: [att]
+      });
+      Logger.log("Email sent successfully to: " + email);
+
+      sheet.getRange(row, 7).setValue(timestamp); // Update the timestamp column in the edited row
+    } catch (error) {
+      Logger.log("Failed to send email: " + error.message);
+    }
+  }
+}
