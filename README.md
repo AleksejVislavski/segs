@@ -8,4 +8,4 @@ I've found a YouTube tutorial for the script. It worked but had an issue with se
 
 # segs-main # is the file in which you can find the Google Script. 
 
-# segs-table # is the sample table used with the script. Nothing special.
+# segs-table # is the Google Sheets sample table used with the script. Nothing special. 
